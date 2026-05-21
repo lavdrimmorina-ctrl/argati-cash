@@ -37,7 +37,16 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%}
   --red:#ff5f57;--red-bg:rgba(255,95,87,0.1);--red-border:rgba(255,95,87,0.3);
   --nb-bg:rgba(255,255,255,0.08);--nb-border:rgba(255,255,255,0.1);--nb-active:rgba(255,255,255,0.14);
 }}
-html,body{margin:0;padding:0;background:#f5f4f0;overflow:hidden}@media(prefers-color-scheme:dark){html,body{background:#050507}}
+html,body{margin:0;padding:0;overflow:hidden}
+body{
+  font-family:'Outfit',sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  padding-bottom:calc(60px + env(safe-area-inset-bottom));
+  overflow-x:hidden;
+}
 #app{
   display:flex;flex-direction:column;
   height:100vh;height:100dvh;
@@ -50,29 +59,22 @@ html,body{margin:0;padding:0;background:#f5f4f0;overflow:hidden}@media(prefers-c
   font-family:'Outfit',sans-serif;
   -webkit-font-smoothing:antialiased;
 }
-@media(prefers-color-scheme:dark){#app::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 70% 35% at 15% 8%,rgba(212,245,60,0.05) 0%,transparent 70%),radial-gradient(ellipse 50% 55% at 85% 85%,rgba(79,179,255,0.04) 0%,transparent 70%)}}
-.hdr{padding:calc(env(safe-area-inset-top,44px) + 8px) 20px 10px;display:flex;justify-content:space-between;align-items:flex-end;flex-shrink:0;z-index:50;background:var(--bg)}
+
+.hdr{padding:calc(env(safe-area-inset-top,44px) + 8px) 20px 10px;display:flex;justify-content:space-between;align-items:flex-end;position:sticky;top:0;z-index:50;background:var(--bg)}
 .hdr-logo{font-size:12px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:var(--lime)}
 .hdr-logo em{color:var(--muted);font-style:normal;font-weight:400}
 .hdr-right{display:flex;align-items:center;gap:10px}
 .hdr-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:0.04em}
-.pages{flex:1;overflow:hidden;position:relative;min-height:0;margin-bottom:calc(env(safe-area-inset-bottom,0px) + 60px)}
-.page{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(10px) scale(0.99);transition:opacity .24s cubic-bezier(.4,0,.2,1),transform .24s cubic-bezier(.4,0,.2,1);will-change:transform,opacity}
+.pages{position:relative;overflow:hidden;height:calc(100vh - 60px - env(safe-area-inset-top,44px) - 60px)}
+.page{position:absolute;inset:0;opacity:0;pointer-events:none;transform:translateY(10px) scale(0.99);transition:opacity .24s cubic-bezier(.4,0,.2,1),transform .24s cubic-bezier(.4,0,.2,1)}
 .page.active{opacity:1;pointer-events:all;transform:none}
-.scroll-area{position:absolute;inset:0;overflow-y:auto;padding:4px 16px 20px;-webkit-overflow-scrolling:touch}
+.scroll-area{height:100%;overflow-y:auto;padding:4px 16px 16px;-webkit-overflow-scrolling:touch}
 .scroll-area::-webkit-scrollbar{display:none}
-.tabs{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  padding:8px 6px 0;
-  padding-bottom:env(safe-area-inset-bottom, 0px);
-  background:var(--bg);
-  border-top:1px solid var(--border);
-  display:flex;gap:2px;z-index:100;
-}
+.tabs{position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--bg);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+@media(prefers-color-scheme:dark){.tabs{background:#050507}}
 @media(prefers-color-scheme:dark){.tabs{background:#050507}}
 
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 10px;border:none;background:none;cursor:pointer;border-radius:12px;transition:background .15s}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;border:none;background:none;cursor:pointer;font-size:10px;font-weight:600;color:var(--dim);transition:color .15s;border-radius:0}
 .tab:active{background:var(--surface2);transform:scale(0.94)}
 .tab-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
 .tab-icon svg{width:22px;height:22px;stroke-width:1.7;stroke:var(--dim);transition:stroke .18s,transform .2s cubic-bezier(.34,1.56,.64,1)}
@@ -176,7 +178,7 @@ html,body{margin:0;padding:0;background:#f5f4f0;overflow:hidden}@media(prefers-c
 
 /* LOG PAGE */
 #pg-log{overflow:hidden}
-#pg-log .scroll-area{overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:0 14px 4px;position:absolute;inset:0}
+#pg-log .scroll-area{height:100%;overflow-y:auto;padding:4px 16px 16px;-webkit-overflow-scrolling:touch}
 .log-top{text-align:center;padding:8px 0 6px}
 .log-lbl{font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
 .log-amount{display:flex;align-items:baseline;justify-content:center;gap:5px}
@@ -306,14 +308,14 @@ html,body{margin:0;padding:0;background:#f5f4f0;overflow:hidden}@media(prefers-c
 .rec-item-del{font-size:14px;color:var(--dim);cursor:pointer;padding:4px 6px}
 
 /* TOAST */
-.toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--surface3);border:1px solid var(--border2);color:var(--text);padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;z-index:9999;letter-spacing:0.04em}
+.toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--surface3);border:1px solid var(--border2);color:var(--text);padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;z-index:9999;letter-spacing:0.04em}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{color:var(--lime-text);border-color:var(--lime-border);background:var(--lime-bg)}
 .toast.warn{color:var(--red);border-color:var(--red-border);background:var(--red-bg)}
 </style>
 </head>
 <body>
-<div id="app">
+
 
 <div class="hdr">
   <div class="hdr-logo">Argati <em>Cash</em></div>
@@ -968,13 +970,12 @@ function toast(msg,type=''){
 // ── INIT ──────────────────────────────────────────────────────────────────
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
-// layout handled by 100dvh + env() in CSS
+
 ld();
 autoLogRecurring();
 renderDash();
 document.getElementById('hdr-date').textContent=mo();
 </script>
 
-</div>
 </body>
 </html>
