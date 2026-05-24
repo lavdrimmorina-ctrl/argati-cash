@@ -473,8 +473,8 @@ body{
     <div class="ob-dot"></div>
     <div class="ob-dot"></div>
   </div>
-  <button class="ob-btn" id="ob-btn" onclick="obNext()">Get started</button>
-  <div class="ob-skip" onclick="obFinish()">Skip setup</div>
+  <button class="ob-btn" id="ob-btn">Get started</button>
+  <div class="ob-skip" id="ob-skip">Skip setup</div>
 </div>
 
 <!-- CONFETTI -->
@@ -1235,11 +1235,11 @@ function calcScore(n,w,s,sal){
   max+=30; const sRatio=sb>0?s/sb:0; pts+=Math.min(30,Math.round(sRatio*30));
   const pct=Math.round(pts/max*100);
   let grade,label,reason,color;
-  if(pct>=90){grade='A';label='Excellent!';reason='You're crushing your budget. Keep it up.';color='#059669';}
-  else if(pct>=75){grade='B';label='Good job';reason='On track — small tweaks will get you to an A.';color='var(--lime-text)';}
-  else if(pct>=60){grade='C';label='Room to improve';reason=w>wb?'Wants spending is over target — cut back a little.':'Savings are below target — try to set more aside.';color='var(--amber)';}
-  else if(pct>=40){grade='D';label='Off track';reason=n>nb&&w>wb?'Both needs and wants are over budget.':n>nb?'Needs spending is too high this month.':'Wants are significantly over target.';color='var(--red)';}
-  else{grade='F';label='Budget blown';reason='Spending is well over budget. Review your expenses.';color='var(--red)';}
+  if(pct>=90){grade='A';label='Excellent!';reason="You're crushing your budget. Keep it up.";color='#059669';}
+  else if(pct>=75){grade='B';label='Good job';reason="On track — small tweaks will get you to an A.";color='var(--lime-text)';}
+  else if(pct>=60){grade='C';label='Room to improve';reason=w>wb?"Wants spending is over target — cut back a little.":"Savings are below target — try to set more aside.";color='var(--amber)';}
+  else if(pct>=40){grade='D';label='Off track';reason=n>nb&&w>wb?"Both needs and wants are over budget.":n>nb?"Needs spending is too high this month.":"Wants are significantly over target.";color='var(--red)';}
+  else{grade='F';label='Budget blown';reason="Spending is well over budget. Review your expenses.";color='var(--red)';}
   return{grade,label,reason,color,pct};
 }
 
@@ -1615,6 +1615,10 @@ ld();
 autoLogRecurring();
 renderDash();
 document.getElementById('hdr-date').textContent=mo();
+// Wire up onboarding buttons
+document.getElementById('ob-btn').addEventListener('click', obNext);
+document.getElementById('ob-skip').addEventListener('click', obFinish);
+
 // Show onboarding on first launch
 const shouldOnboard = !S.onboarded && !S.salary;
 if(shouldOnboard){
