@@ -436,6 +436,88 @@ body{
 .net-month-chip-lbl{font-size:9px;color:var(--dim);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px}
 .net-month-chip-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--lime-text)}
 
+
+/* FLOATING SCANNER BUTTON */
+.scan-fab{
+  position:fixed;
+  bottom:calc(env(safe-area-inset-bottom) + 100px);
+  right:20px;
+  width:52px;height:52px;
+  background:var(--lime);
+  border-radius:16px;
+  border:none;
+  display:none;
+  align-items:center;justify-content:center;
+  z-index:90;
+  cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,0,0,0.25),0 1px 4px rgba(0,0,0,0.15);
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1),opacity .2s;
+}
+.scan-fab.visible{display:flex}
+.scan-fab:active{transform:scale(0.9)}
+.scan-fab svg{width:24px;height:24px;stroke:#0a0c02;stroke-width:2;fill:none}
+@media(prefers-color-scheme:light){.scan-fab svg{stroke:#fff}}
+
+/* SCANNER MODAL */
+.scanner-modal{
+  position:fixed;inset:0;z-index:500;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  transform:translateY(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.scanner-modal.open{transform:translateY(0)}
+.scanner-modal-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,44px) + 12px) 20px 14px;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.scanner-modal-title{font-size:16px;font-weight:700;color:var(--text)}
+.scanner-close{width:32px;height:32px;border-radius:50%;background:var(--surface2);border:none;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.scanner-body{flex:1;overflow-y:auto;padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 20px)}
+
+.scanner-drop{
+  border:2px dashed var(--border2);
+  border-radius:20px;
+  padding:40px 24px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .2s,background .2s;
+  margin-bottom:16px;
+  position:relative;
+}
+.scanner-drop:active,.scanner-drop.drag{border-color:var(--lime-border);background:var(--lime-bg)}
+.scanner-drop-icon{font-size:48px;margin-bottom:12px;display:block}
+.scanner-drop-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.scanner-drop-sub{font-size:13px;color:var(--muted);line-height:1.5}
+
+.scanner-preview-wrap{position:relative;margin-bottom:16px;display:none}
+.scanner-preview-wrap img{width:100%;border-radius:16px;max-height:260px;object-fit:cover;border:1px solid var(--border)}
+.scanner-preview-clear{position:absolute;top:8px;right:8px;width:28px;height:28px;background:rgba(0,0,0,0.6);border-radius:50%;border:none;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+.scanner-analysing{display:none;text-align:center;padding:20px;color:var(--muted);font-size:13px}
+.scanner-analysing-ring{width:40px;height:40px;border:3px solid var(--border2);border-top-color:var(--lime-text);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+
+.scanner-result{display:none;background:var(--lime-bg);border:1.5px solid var(--lime-border);border-radius:18px;padding:18px 20px;margin-bottom:16px}
+.scanner-result-hdr{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.scanner-result-dot{width:7px;height:7px;background:var(--lime-text);border-radius:50%}
+.scanner-result-lbl{font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--lime-text)}
+.scanner-result-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.scanner-result-row:last-of-type{margin-bottom:0}
+.scanner-result-key{font-size:13px;color:var(--muted);font-weight:400}
+.scanner-result-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--lime-text)}
+.scanner-result-desc{font-size:14px;font-weight:500;color:var(--text);max-width:55%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scanner-use-btn{width:100%;margin-top:14px;padding:14px;background:var(--lime);border:none;border-radius:14px;color:#0a0c02;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase}
+@media(prefers-color-scheme:light){.scanner-use-btn{color:#fff;background:var(--lime-text)}}
+.scanner-error{display:none;background:var(--red-bg);border:1px solid var(--red-border);border-radius:14px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--red);text-align:center}
+
+.scanner-tips{border-radius:14px;background:var(--surface);border:1px solid var(--border);padding:14px 16px}
+.scanner-tips-title{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.scanner-tip{font-size:12px;color:var(--muted);margin-bottom:5px;padding-left:14px;position:relative;line-height:1.4}
+.scanner-tip::before{content:'•';position:absolute;left:0;color:var(--lime-text)}
+
 /* TOAST */
 .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--surface3);border:1px solid var(--border2);color:var(--text);padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;z-index:9999;letter-spacing:0.04em}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -596,18 +678,7 @@ body{
           <div class="freq-btn" data-freq="weekly" onclick="pickFreq('weekly',this)">Weekly</div>
         </div>
       </div>
-      <button class="scan-btn" onclick="openScanner()">
-        <span style="font-size:18px">📷</span> Scan receipt or bank screenshot
-      </button>
-      <img id="scan-preview" class="scan-preview">
-      <div class="scan-result" id="scan-result">
-        <div class="scan-result-lbl">📷 Detected from image</div>
-        <div class="scan-result-row">Amount <span class="scan-result-val" id="scan-amt-val">—</span></div>
-        <div class="scan-result-row" style="margin-top:4px">Description <span class="scan-result-val" id="scan-desc-val">—</span></div>
-        <button class="scan-use-btn" onclick="useScanResult()">Use this ↗</button>
-      </div>
-      <div class="scan-spinner" id="scan-spinner">🔍 Analysing image…</div>
-      <input type="file" id="scan-file" accept="image/*" capture="environment" style="display:none" onchange="handleScanFile(event)">
+
       <div class="numpad">
         <div class="nb" onclick="np('1')">1</div><div class="nb" onclick="np('2')">2</div><div class="nb" onclick="np('3')">3</div>
         <div class="nb" onclick="np('4')">4</div><div class="nb" onclick="np('5')">5</div><div class="nb" onclick="np('6')">6</div>
@@ -709,19 +780,21 @@ body{
       <div class="fl-group"><div class="fl-lbl">Wants %</div><input class="fl-input" type="number" id="s-wp" placeholder="30" inputmode="numeric"></div>
       <div class="fl-group"><div class="fl-lbl">Savings %</div><input class="fl-input" type="number" id="s-sp" placeholder="20" inputmode="numeric"></div>
       <div class="set-sect">Notifications</div>
-      <div class="notif-row">
-        <div class="notif-row-body">
-          <div class="notif-row-title">Evening reminder</div>
-          <div class="notif-row-sub">Daily nudge at 8pm to log expenses</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-size:14px;font-weight:500;color:var(--text)">Evening reminder</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Daily nudge at 8pm to log expenses</div>
+          </div>
+          <button class="notif-enable-btn" id="notif-btn" onclick="toggleNotifications()">Enable</button>
         </div>
-        <button class="notif-enable-btn" id="notif-btn" onclick="toggleNotifications()">Enable</button>
-      </div>
-      <div class="notif-row">
-        <div class="notif-row-body">
-          <div class="notif-row-title">Overspend alert</div>
-          <div class="notif-row-sub">Notify when a category is over budget</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px">
+          <div>
+            <div style="font-size:14px;font-weight:500;color:var(--text)">Overspend alert</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Fires when a category exceeds budget</div>
+          </div>
+          <div style="font-size:11px;font-weight:600;color:var(--lime-text);background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:8px;padding:4px 10px">Active</div>
         </div>
-        <div class="notif-enabled" id="overspend-notif-status">Active</div>
       </div>
       <div class="set-sect">Worker URL</div>
       <div class="fl-group">
@@ -862,6 +935,9 @@ function goto(id,btn,skipHap){
   if(id==='goals'){renderGoals();renderRecurringList();}
   if(id==='report'){reportOffset=0;renderReport();}
   if(id==='settings')loadForm();
+  // Show scanner FAB only on Log tab
+  const fab=document.getElementById('scan-fab');
+  if(fab)fab.className='scan-fab'+(id==='log'?' visible':'');
 }
 
 function movePill(activeBtn){
@@ -1689,105 +1765,117 @@ async function sendOverspendPush(msg){
 // ── RECEIPT SCANNER ───────────────────────────────────────────────────────
 let scanResult = null;
 
-function openScanner(){
+function openScannerModal(){
   hap('light');
+  document.getElementById('scanner-modal').classList.add('open');
+  // Show FAB only on log tab
+}
+
+function closeScannerModal(){
+  hap('light');
+  document.getElementById('scanner-modal').classList.remove('open');
+}
+
+function triggerScanFile(){
   document.getElementById('scan-file').click();
+}
+
+function clearScan(){
+  scanResult = null;
+  document.getElementById('scanner-preview-wrap').style.display = 'none';
+  document.getElementById('scanner-result').style.display = 'none';
+  document.getElementById('scanner-error').style.display = 'none';
+  document.getElementById('scanner-drop').style.display = 'block';
 }
 
 function handleScanFile(e){
   const file = e.target.files[0];
   if(!file) return;
-
-  // Show preview
   const reader = new FileReader();
   reader.onload = async ev => {
-    const preview = document.getElementById('scan-preview');
-    preview.src = ev.target.result;
-    preview.style.display = 'block';
-    document.getElementById('scan-result').style.display = 'none';
-    document.getElementById('scan-spinner').style.display = 'block';
+    // Show preview
+    const wrap = document.getElementById('scanner-preview-wrap');
+    document.getElementById('scanner-preview-img').src = ev.target.result;
+    wrap.style.display = 'block';
+    document.getElementById('scanner-drop').style.display = 'none';
+    document.getElementById('scanner-result').style.display = 'none';
+    document.getElementById('scanner-error').style.display = 'none';
+    document.getElementById('scanner-analysing').style.display = 'block';
     await analyseReceipt(ev.target.result);
   };
   reader.readAsDataURL(file);
-  // Reset input so same file can be re-selected
   e.target.value = '';
 }
 
 async function analyseReceipt(dataUrl){
-  if(!S.key){ toast('Add AI API key in Settings'); document.getElementById('scan-spinner').style.display='none'; return; }
+  if(!S.key){
+    document.getElementById('scanner-analysing').style.display = 'none';
+    document.getElementById('scanner-error').style.display = 'block';
+    document.getElementById('scanner-error').textContent = 'Add your Groq or Gemini API key in Settings first.';
+    return;
+  }
 
   const base64 = dataUrl.split(',')[1];
   const mimeType = dataUrl.split(';')[0].split(':')[1];
-
-  const prompt = `You are analysing a receipt or bank transaction screenshot. Extract:
-1. The total amount paid (just the number, e.g. 12.50)
-2. A short description of what was purchased (e.g. "Supermarket", "Coffee", "Electricity bill")
-
-Respond ONLY with valid JSON like: {"amount": 12.50, "description": "Supermarket"}
-If you cannot determine the amount, use null. If no description, use "Expense".`;
+  const prompt = `Analyse this receipt or bank screenshot. Extract:
+1. The total amount paid (number only, e.g. 12.50)
+2. Short description of what was bought (e.g. "Supermarket", "Coffee", "Electricity")
+Respond ONLY with JSON: {"amount": 12.50, "description": "Supermarket"}
+If amount unclear use null. If description unclear use "Expense".`;
 
   try {
     let text = '';
-
     if(S.key.startsWith('gsk_')){
-      // Groq vision (llama-3.2-11b-vision)
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + S.key },
-        body: JSON.stringify({
-          model: 'llama-3.2-11b-vision-preview',
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image_url', image_url: { url: dataUrl } },
-              { type: 'text', text: prompt }
-            ]
-          }],
-          max_tokens: 100,
-          temperature: 0.1,
-          response_format: { type: 'json_object' }
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.key},
+        body:JSON.stringify({
+          model:'llama-3.2-11b-vision-preview',
+          messages:[{role:'user',content:[
+            {type:'image_url',image_url:{url:dataUrl}},
+            {type:'text',text:prompt}
+          ]}],
+          max_tokens:120,temperature:0.1,
+          response_format:{type:'json_object'}
         })
       });
       const d = await res.json();
       text = d.choices?.[0]?.message?.content || '{}';
     } else {
-      // Gemini vision
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${S.key}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [
-            { inline_data: { mime_type: mimeType, data: base64 } },
-            { text: prompt }
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${S.key}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          contents:[{parts:[
+            {inline_data:{mime_type:mimeType,data:base64}},
+            {text:prompt}
           ]}],
-          generationConfig: { maxOutputTokens: 100, temperature: 0.1 }
+          generationConfig:{maxOutputTokens:120,temperature:0.1}
         })
       });
       const d = await res.json();
       text = d.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     }
 
-    // Parse JSON response
-    const clean = text.replace(/```json|```/g, '').trim();
+    const clean = text.replace(/```json|```/g,'').trim();
     const parsed = JSON.parse(clean);
     scanResult = parsed;
 
-    document.getElementById('scan-spinner').style.display = 'none';
-    document.getElementById('scan-amt-val').textContent = parsed.amount ? '€' + parsed.amount : '—';
-    document.getElementById('scan-desc-val').textContent = parsed.description || '—';
-    document.getElementById('scan-result').style.display = 'block';
+    document.getElementById('scanner-analysing').style.display = 'none';
+    document.getElementById('scanner-amt').textContent = parsed.amount ? '€'+parsed.amount : '—';
+    document.getElementById('scanner-desc').textContent = parsed.description || '—';
+    document.getElementById('scanner-result').style.display = 'block';
     hap('success');
 
   } catch(err) {
-    document.getElementById('scan-spinner').style.display = 'none';
-    toast('Could not read image. Try a clearer photo.');
-    console.error(err);
+    document.getElementById('scanner-analysing').style.display = 'none';
+    document.getElementById('scanner-error').style.display = 'block';
+    document.getElementById('scanner-error').textContent = 'Could not read image. Try a clearer photo with better lighting.';
   }
 }
 
-function useScanResult(){
+function useScan(){
   if(!scanResult) return;
-  hap('light');
+  hap('success');
   if(scanResult.amount){
     const a = parseFloat(scanResult.amount);
     if(a > 0){
@@ -1799,11 +1887,11 @@ function useScanResult(){
   if(scanResult.description){
     document.getElementById('exp-desc').value = scanResult.description;
   }
-  // Hide scanner UI
-  document.getElementById('scan-preview').style.display = 'none';
-  document.getElementById('scan-result').style.display = 'none';
   document.getElementById('add-btn').disabled = !(parseFloat(amt) > 0 && cat);
-  toast('Filled in! Pick a category.', 'ok');
+  closeScannerModal();
+  // Go to log tab
+  goto('log', document.getElementById('tab-log'), true);
+  toast('Filled in! Pick a category ↓', 'ok');
   scanResult = null;
 }
 
@@ -1876,6 +1964,69 @@ window.addEventListener('resize',()=>{
   if(active)movePill(active);
 });
 </script>
+
+
+<!-- SCANNER FAB -->
+<button class="scan-fab" id="scan-fab" onclick="openScannerModal()">
+  <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+</button>
+
+<!-- SCANNER MODAL -->
+<div class="scanner-modal" id="scanner-modal">
+  <div class="scanner-modal-hdr">
+    <div class="scanner-modal-title">📷 Receipt Scanner</div>
+    <button class="scanner-close" onclick="closeScannerModal()">✕</button>
+  </div>
+  <div class="scanner-body">
+
+    <div class="scanner-drop" id="scanner-drop" onclick="triggerScanFile()">
+      <span class="scanner-drop-icon">📸</span>
+      <div class="scanner-drop-title">Tap to scan a receipt</div>
+      <div class="scanner-drop-sub">Take a photo or choose from your library.<br>Works with receipts, bank screenshots, invoices.</div>
+    </div>
+
+    <div class="scanner-preview-wrap" id="scanner-preview-wrap">
+      <img id="scanner-preview-img" src="" alt="Receipt preview">
+      <button class="scanner-preview-clear" onclick="clearScan()">✕</button>
+    </div>
+
+    <div class="scanner-analysing" id="scanner-analysing">
+      <div class="scanner-analysing-ring"></div>
+      Analysing your image with AI…
+    </div>
+
+    <div class="scanner-result" id="scanner-result">
+      <div class="scanner-result-hdr">
+        <div class="scanner-result-dot"></div>
+        <div class="scanner-result-lbl">Detected</div>
+      </div>
+      <div class="scanner-result-row">
+        <span class="scanner-result-key">Amount</span>
+        <span class="scanner-result-val" id="scanner-amt">—</span>
+      </div>
+      <div class="scanner-result-row">
+        <span class="scanner-result-key">Description</span>
+        <span class="scanner-result-desc" id="scanner-desc">—</span>
+      </div>
+      <button class="scanner-use-btn" onclick="useScan()">Use this in Log ↗</button>
+    </div>
+
+    <div class="scanner-error" id="scanner-error">
+      Could not read the image. Try a clearer photo with better lighting.
+    </div>
+
+    <div class="scanner-tips">
+      <div class="scanner-tips-title">Tips for best results</div>
+      <div class="scanner-tip">Use a receipt, bank app screenshot, or invoice</div>
+      <div class="scanner-tip">Make sure the total amount is clearly visible</div>
+      <div class="scanner-tip">Good lighting, flat surface, no blur</div>
+      <div class="scanner-tip">Works with any currency or language</div>
+    </div>
+
+  </div>
+</div>
+
+<input type="file" id="scan-file" accept="image/*" capture="environment" style="display:none" onchange="handleScanFile(event)">
 
 </body>
 </html>
