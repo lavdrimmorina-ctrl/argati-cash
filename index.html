@@ -350,6 +350,55 @@ body{
 .rec-item-del{font-size:14px;color:var(--dim);cursor:pointer;padding:4px 6px}
 
 
+
+
+/* ONBOARDING */
+.onboard{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;padding:env(safe-area-inset-top,44px) 0 env(safe-area-inset-bottom,0px)}
+.onboard.hidden{display:none}
+.ob-slides{display:flex;overflow:hidden;flex:1}
+.ob-slide{min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 32px;text-align:center;transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.ob-emoji{font-size:72px;margin-bottom:24px;animation:obPop .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes obPop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+.ob-title{font-size:28px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em}
+.ob-sub{font-size:15px;color:var(--muted);line-height:1.6;margin-bottom:32px;font-weight:400}
+.ob-field-group{width:100%;margin-bottom:12px;text-align:left}
+.ob-lbl{font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.ob-dots{display:flex;justify-content:center;gap:6px;padding:16px 0}
+.ob-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all .3s}
+.ob-dot.active{width:20px;background:var(--lime)}
+.ob-btn{width:calc(100% - 48px);margin:0 24px 16px;padding:16px;background:var(--lime);color:#0a0c02;border:none;border-radius:18px;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:0.04em}
+@media(prefers-color-scheme:light){.ob-btn{color:#fff;background:var(--lime-text)}}
+.ob-skip{font-size:13px;color:var(--dim);text-align:center;cursor:pointer;padding:8px;margin-bottom:8px}
+
+/* CONFETTI */
+#confetti-canvas{position:fixed;inset:0;z-index:998;pointer-events:none;display:none}
+
+/* SPENDING SCORE */
+.score-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:16px 20px;margin-bottom:8px;
+  display:flex;align-items:center;gap:16px;
+  position:relative;overflow:hidden;
+}
+.score-grade{
+  width:64px;height:64px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;font-weight:900;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;
+  transition:all .4s cubic-bezier(.34,1.56,.64,1);
+}
+.score-grade.A{background:rgba(16,185,129,0.15);color:#059669;border:1.5px solid rgba(16,185,129,0.3)}
+.score-grade.B{background:var(--lime-bg);color:var(--lime-text);border:1.5px solid var(--lime-border)}
+.score-grade.C{background:var(--amber-bg);color:var(--amber);border:1.5px solid rgba(255,179,71,0.3)}
+.score-grade.D{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red-border)}
+.score-grade.F{background:rgba(204,34,34,0.18);color:var(--red);border:1.5px solid var(--red-border)}
+.score-body{flex:1;min-width:0}
+.score-title{font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.score-label{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+.score-reason{font-size:12px;color:var(--muted);line-height:1.4}
+.score-bar-wrap{height:3px;background:var(--border2);border-radius:2px;overflow:hidden;margin-top:8px}
+.score-bar{height:100%;border-radius:2px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+
 /* EDIT MODAL */
 .edit-modal-wrap{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s}
 .edit-modal-wrap.show{opacity:1;pointer-events:all}
@@ -373,6 +422,19 @@ body{
 .cmp-delta.better{color:var(--lime-text)}
 .cmp-delta.worse{color:var(--red)}
 .cmp-delta.same{color:var(--muted)}
+
+
+/* NET SAVINGS */
+.net-card{background:linear-gradient(135deg,var(--lime-bg),var(--surface));border:1px solid var(--lime-border);border-radius:20px;padding:18px 20px;margin-bottom:8px}
+.net-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.net-lbl{font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--lime-text);opacity:.8;margin-bottom:4px}
+.net-amount{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:var(--lime-text);line-height:1;letter-spacing:-0.02em}
+.net-edit-btn{background:var(--lime-bg);border:1px solid var(--lime-border);border-radius:10px;padding:6px 12px;font-size:11px;font-weight:600;color:var(--lime-text);cursor:pointer;font-family:'Outfit',sans-serif;letter-spacing:0.06em;text-transform:uppercase}
+.net-history{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.net-history::-webkit-scrollbar{display:none}
+.net-month-chip{flex-shrink:0;background:var(--surface2);border-radius:10px;padding:6px 10px;text-align:center}
+.net-month-chip-lbl{font-size:9px;color:var(--dim);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px}
+.net-month-chip-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--lime-text)}
 
 /* TOAST */
 .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--surface3);border:1px solid var(--border2);color:var(--text);padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;z-index:9999;letter-spacing:0.04em}
@@ -406,6 +468,15 @@ body{
         </div>
       </div>
 
+      <div class="score-card" id="score-card">
+        <div class="score-grade" id="score-grade">—</div>
+        <div class="score-body">
+          <div class="score-title">Monthly score</div>
+          <div class="score-label" id="score-label">Set your salary to start</div>
+          <div class="score-reason" id="score-reason">Go to Settings to configure your budget.</div>
+          <div class="score-bar-wrap"><div class="score-bar" id="score-bar" style="width:0%"></div></div>
+        </div>
+      </div>
       <div class="alert-bar" id="alert-bar">
         <div class="alert-bar-ico">🚨</div>
         <div class="alert-bar-text" id="alert-text"></div>
@@ -509,9 +580,20 @@ body{
       <div class="sect-lbl">Recurring expenses</div>
       <div id="recurring-list"></div>
       <div class="sect-lbl">Total saved this month</div>
-      <div class="gc" style="text-align:center;padding:16px">
+      <div class="gc" style="text-align:center;padding:16px;margin-bottom:8px">
         <div style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:600;color:var(--lime-text)" id="g-total-saved">€0</div>
         <div style="font-size:11px;color:var(--muted);margin-top:4px">keep it up 💪</div>
+      </div>
+      <div class="sect-lbl">Net savings balance</div>
+      <div class="net-card" id="net-card">
+        <div class="net-card-top">
+          <div>
+            <div class="net-lbl">Total balance</div>
+            <div class="net-amount" id="net-amount">€0</div>
+          </div>
+          <button class="net-edit-btn" onclick="openNetModal()">Adjust</button>
+        </div>
+        <div class="net-history" id="net-history"></div>
       </div>
     </div>
   </div>
@@ -534,10 +616,21 @@ body{
         <div class="chart-title">Daily spending — last 14 days</div>
         <div class="chart-bars" id="day-chart"></div>
       </div>
+      <div class="gc" style="margin-bottom:8px;padding:16px 18px">
+        <div class="chart-title">Category split</div>
+        <div style="display:flex;align-items:center;gap:20px">
+          <svg id="donut-svg" width="100" height="100" viewBox="0 0 100 100" style="flex-shrink:0;transform:rotate(-90deg)"></svg>
+          <div id="donut-legend" style="flex:1;display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+      </div>
       <div class="bar-card">
         <div class="bar-row"><div class="bar-lbl">Needs</div><div class="bar-track"><div class="bar-fill" id="bf-n" style="width:0%;background:var(--blue)"></div></div><div class="bar-val" id="bv-n">€0</div></div>
         <div class="bar-row"><div class="bar-lbl">Wants</div><div class="bar-track"><div class="bar-fill" id="bf-w" style="width:0%;background:var(--amber)"></div></div><div class="bar-val" id="bv-w">€0</div></div>
         <div class="bar-row"><div class="bar-lbl">Savings</div><div class="bar-track"><div class="bar-fill" id="bf-s" style="width:0%;background:var(--lime-text)"></div></div><div class="bar-val" id="bv-s">€0</div></div>
+      </div>
+      <div class="gc" style="margin-bottom:8px;padding:16px 18px" id="top-cats-card">
+        <div class="chart-title" style="margin-bottom:10px">Top expenses</div>
+        <div id="top-cats-list"></div>
       </div>
       <div class="cmp-card" id="cmp-card">
         <div class="cmp-title">vs last month</div>
@@ -576,6 +669,7 @@ body{
       </div>
       <button class="save-btn" onclick="saveSettings()">Save settings</button>
       <div class="set-sect">Data</div>
+      <button class="save-btn" style="margin-bottom:8px" onclick="exportCSV()">Export to CSV</button>
       <button class="del-btn" onclick="clearMonth()">Clear this month</button>
       <button class="del-btn" onclick="clearAll()">Clear all data</button>
     </div>
@@ -608,6 +702,43 @@ body{
 </div>
 
 
+
+<!-- ONBOARDING -->
+<div class="onboard" id="onboard">
+  <div class="ob-slides" id="ob-slides">
+    <div class="ob-slide">
+      <div class="ob-emoji">💸</div>
+      <div class="ob-title">Argati Cash</div>
+      <div class="ob-sub">Your personal money manager. Track spending, hit savings goals, and take control of your salary — all in one place.</div>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-emoji">💰</div>
+      <div class="ob-title">Set your salary</div>
+      <div class="ob-sub">Tell us how much you earn and when you get paid so we can calculate your daily budget.</div>
+      <div class="ob-field-group"><div class="ob-lbl">Monthly net salary (€)</div><input class="fl-input" id="ob-salary" type="number" placeholder="e.g. 800" inputmode="decimal"></div>
+      <div class="ob-field-group"><div class="ob-lbl">Payday (day of month)</div><input class="fl-input" id="ob-payday" type="number" placeholder="25" min="1" max="31" inputmode="numeric"></div>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-emoji">🎯</div>
+      <div class="ob-title">Budget split</div>
+      <div class="ob-sub">The 50/30/20 rule: 50% needs, 30% wants, 20% savings. Adjust to fit your life.</div>
+      <div class="ob-field-group"><div class="ob-lbl">Needs % (rent, food, bills)</div><input class="fl-input" id="ob-np" type="number" placeholder="50" inputmode="numeric"></div>
+      <div class="ob-field-group"><div class="ob-lbl">Wants % (dining, fun)</div><input class="fl-input" id="ob-wp" type="number" placeholder="30" inputmode="numeric"></div>
+      <div class="ob-field-group"><div class="ob-lbl">Savings %</div><input class="fl-input" id="ob-sp" type="number" placeholder="20" inputmode="numeric"></div>
+    </div>
+  </div>
+  <div class="ob-dots" id="ob-dots">
+    <div class="ob-dot active"></div>
+    <div class="ob-dot"></div>
+    <div class="ob-dot"></div>
+  </div>
+  <button class="ob-btn" id="ob-btn" onclick="obNext()">Get started</button>
+  <div class="ob-skip" onclick="obFinish()">Skip setup</div>
+</div>
+
+<!-- CONFETTI -->
+<canvas id="confetti-canvas"></canvas>
+
 <!-- EDIT EXPENSE MODAL -->
 <div class="edit-modal-wrap" id="edit-modal" onclick="closeEditModal(event)">
   <div class="modal">
@@ -625,6 +756,20 @@ body{
     <div class="modal-btn-row" style="margin-top:12px">
       <button class="modal-cancel" onclick="closeEditModal()">Cancel</button>
       <button class="modal-save" onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- NET SAVINGS MODAL -->
+<div class="modal-wrap" id="net-modal" onclick="closeNetModal(event)">
+  <div class="modal">
+    <div class="modal-title">Adjust savings balance</div>
+    <div class="modal-row"><div class="modal-lbl">Current balance (€)</div><input class="fl-input" id="net-input" type="number" placeholder="e.g. 1200" inputmode="decimal"></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Enter your total savings balance — bank account, cash, whatever you consider saved. The app will track how it grows each month.</div>
+    <div class="modal-btn-row">
+      <button class="modal-cancel" onclick="closeNetModal()">Cancel</button>
+      <button class="modal-save" onclick="saveNet()">Save</button>
     </div>
   </div>
 </div>
@@ -789,6 +934,7 @@ function renderDash(){
   document.getElementById('rn-v').textContent=fmt(n);
   document.getElementById('rw-v').textContent=fmt(w);
   document.getElementById('rs-v').textContent=fmt(s);
+  renderScore(n,w,s,sal);
   document.getElementById('rt-needs').classList.toggle('over-budget',n>nb);
   document.getElementById('rt-wants').classList.toggle('over-budget',w>wb);
   document.getElementById('rt-savings').classList.toggle('over-budget',s<sb*0.3&&sal>0);
@@ -949,11 +1095,12 @@ function addExp(){
 function renderGoals(){
   const saved=myExp().filter(e=>e.c==='savings').reduce((a,e)=>a+e.a,0);
   document.getElementById('g-total-saved').textContent=fmt(saved);
+  renderNet();
   const el=document.getElementById('goals-list');
   const goals=S.goals||[];
   if(!goals.length){el.innerHTML='<div class="empty-state" style="background:var(--surface);border:1px solid var(--border);border-radius:16px"><strong>🎯</strong>No goals yet<br>Add one below</div>';return;}
   el.innerHTML=goals.map((g,i)=>{
-    const pct=Math.min(100,Math.round((saved/g.target)*100)),done=pct>=100;
+    const pct=Math.min(100,Math.round((saved/g.target)*100)),done=pct>=100;if(done&&pct>=(100)&&!g.celebrated){g.celebrated=true;sv();fireConfetti();}
     return`<div class="goal-card"><div class="goal-icon">${g.emoji||'🎯'}</div><div class="goal-body"><div class="goal-name">${g.name}</div><div class="goal-meta">${fmt(Math.min(saved,g.target))} / ${fmt(g.target)}</div><div class="goal-bar-wrap"><div class="goal-bar${done?' done':''}" style="width:${pct}%"></div></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0"><div class="goal-pct">${pct}%</div><div onclick="delGoal(${i})" style="font-size:11px;color:var(--dim);cursor:pointer;padding:4px">✕</div></div></div>`;
   }).join('');
 }
@@ -1000,6 +1147,115 @@ function saveGoal(){
 function delGoal(i){hap('error');S.goals.splice(i,1);sv();renderGoals();}
 
 
+
+
+// ── ONBOARDING ────────────────────────────────────────────────────────────
+let obIdx=0;
+const OB_TOTAL=3;
+
+function obUpdateDots(){
+  document.querySelectorAll('.ob-dot').forEach((d,i)=>d.className='ob-dot'+(i===obIdx?' active':''));
+  document.getElementById('ob-btn').textContent=obIdx===OB_TOTAL-1?'Start tracking':'Next →';
+}
+
+function obNext(){
+  hap('light');
+  if(obIdx===OB_TOTAL-1){obFinish();return;}
+  obIdx++;
+  document.getElementById('ob-slides').style.transform=`translateX(-${obIdx*100}%)`;
+  obUpdateDots();
+}
+
+function obFinish(){
+  // Save whatever was entered
+  const sal=parseFloat(document.getElementById('ob-salary').value);
+  const pay=parseInt(document.getElementById('ob-payday').value);
+  const np=parseFloat(document.getElementById('ob-np').value);
+  const wp=parseFloat(document.getElementById('ob-wp').value);
+  const sp=parseFloat(document.getElementById('ob-sp').value);
+  if(sal)S.salary=sal;
+  if(pay)S.payday=pay;
+  if(np)S.np=np;
+  if(wp)S.wp=wp;
+  if(sp)S.sp=sp;
+  S.onboarded=true;
+  sv();
+  document.getElementById('onboard').classList.add('hidden');
+  renderDash();
+  hap('success');
+}
+
+// ── CONFETTI ──────────────────────────────────────────────────────────────
+function fireConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  if(!canvas)return;
+  canvas.style.display='block';
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const ctx=canvas.getContext('2d');
+  const pieces=[];
+  const colors=['#d4f53c','#4fb3ff','#ffb347','#ff6b9d','#ffffff','#a855f7'];
+  for(let i=0;i<120;i++){
+    pieces.push({
+      x:Math.random()*canvas.width,y:-10,
+      r:Math.random()*6+3,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      vx:(Math.random()-0.5)*6,vy:Math.random()*4+2,
+      va:(Math.random()-0.5)*0.2,a:Math.random()*Math.PI*2,
+      life:1
+    });
+  }
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;p.a+=p.va;p.life-=0.008;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);
+      ctx.globalAlpha=Math.max(0,p.life);
+      ctx.fillStyle=p.color;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r);
+      ctx.restore();
+    });
+    frame++;
+    if(frame<180)requestAnimationFrame(draw);
+    else{ctx.clearRect(0,0,canvas.width,canvas.height);canvas.style.display='none';}
+  }
+  draw();
+}
+
+// ── SPENDING SCORE ────────────────────────────────────────────────────────
+function calcScore(n,w,s,sal){
+  if(!sal) return {grade:'—',label:'No salary set',reason:'Add your salary in Settings.',color:'var(--muted)',pct:0};
+  const nb=sal*(S.np/100), wb=sal*(S.wp/100), sb=sal*(S.sp/100);
+  let pts=0, max=0;
+  // Needs: under budget = good (40 pts)
+  max+=40; if(n<=nb) pts+=40; else pts+=Math.max(0,40-Math.round((n-nb)/nb*40));
+  // Wants: under budget = good (30 pts)
+  max+=30; if(w<=wb) pts+=30; else pts+=Math.max(0,30-Math.round((w-wb)/wb*30));
+  // Savings: hit target = good (30 pts)
+  max+=30; const sRatio=sb>0?s/sb:0; pts+=Math.min(30,Math.round(sRatio*30));
+  const pct=Math.round(pts/max*100);
+  let grade,label,reason,color;
+  if(pct>=90){grade='A';label='Excellent!';reason='You're crushing your budget. Keep it up.';color='#059669';}
+  else if(pct>=75){grade='B';label='Good job';reason='On track — small tweaks will get you to an A.';color='var(--lime-text)';}
+  else if(pct>=60){grade='C';label='Room to improve';reason=w>wb?'Wants spending is over target — cut back a little.':'Savings are below target — try to set more aside.';color='var(--amber)';}
+  else if(pct>=40){grade='D';label='Off track';reason=n>nb&&w>wb?'Both needs and wants are over budget.':n>nb?'Needs spending is too high this month.':'Wants are significantly over target.';color='var(--red)';}
+  else{grade='F';label='Budget blown';reason='Spending is well over budget. Review your expenses.';color='var(--red)';}
+  return{grade,label,reason,color,pct};
+}
+
+function renderScore(n,w,s,sal){
+  const sc=calcScore(n,w,s,sal);
+  const gradeEl=document.getElementById('score-grade');
+  const barEl=document.getElementById('score-bar');
+  if(!gradeEl)return;
+  gradeEl.textContent=sc.grade;
+  gradeEl.className='score-grade'+(sc.grade!=='—'?' '+sc.grade:'');
+  document.getElementById('score-label').textContent=sc.label;
+  document.getElementById('score-reason').textContent=sc.reason;
+  barEl.style.width=sc.pct+'%';
+  const barColors={'A':'#059669','B':'var(--lime-text)','C':'var(--amber)','D':'var(--red)','F':'var(--red)'};
+  barEl.style.background=barColors[sc.grade]||'var(--muted)';
+}
+
 // ── EDIT EXPENSE ──────────────────────────────────────────────────────────
 let editId=null, editCat='';
 
@@ -1035,6 +1291,117 @@ function saveEdit(){
   document.getElementById('edit-modal').classList.remove('show');
   renderDash();
   toast('Updated!','ok');
+}
+
+
+
+
+// ── NET SAVINGS TRACKER ───────────────────────────────────────────────────
+function renderNet(){
+  const base=S.netBase||0;
+  // Add all savings logged across all months
+  const totalSaved=(S.expenses||[]).filter(e=>e.c==='savings').reduce((a,e)=>a+e.a,0);
+  const net=base+totalSaved;
+  const el=document.getElementById('net-amount');
+  if(el)el.textContent=fmt(net);
+
+  // Build month history chips
+  const hist=document.getElementById('net-history');
+  if(!hist)return;
+  const months={};
+  (S.expenses||[]).filter(e=>e.c==='savings').forEach(e=>{
+    if(!months[e.m])months[e.m]=0;
+    months[e.m]+=e.a;
+  });
+  const sorted=Object.entries(months).sort((a,b)=>a[0].localeCompare(b[0])).slice(-6);
+  if(!sorted.length){hist.innerHTML='<div style="font-size:12px;color:var(--dim)">No savings logged yet</div>';return;}
+  hist.innerHTML=sorted.map(([mk,val])=>{
+    const [yr,mo]=mk.split('-');
+    const d=new Date(parseInt(yr),parseInt(mo));
+    const lbl=d.toLocaleDateString('en-US',{month:'short',year:'2-digit'});
+    return`<div class="net-month-chip"><div class="net-month-chip-lbl">${lbl}</div><div class="net-month-chip-val">+€${Math.round(val)}</div></div>`;
+  }).join('');
+}
+
+function openNetModal(){
+  document.getElementById('net-input').value=S.netBase||'';
+  document.getElementById('net-modal').classList.add('show');
+}
+function closeNetModal(e){
+  if(!e||e.target===document.getElementById('net-modal'))
+    document.getElementById('net-modal').classList.remove('show');
+}
+function saveNet(){
+  S.netBase=parseFloat(document.getElementById('net-input').value)||0;
+  sv();document.getElementById('net-modal').classList.remove('show');
+  renderNet();hap('success');toast('Balance updated','ok');
+}
+
+// ── TOP SPENDING CATEGORIES ───────────────────────────────────────────────
+function renderTopCats(exps){
+  const el=document.getElementById('top-cats-list');
+  if(!el)return;
+  if(!exps.length){el.innerHTML='<div style="font-size:13px;color:var(--dim);text-align:center;padding:8px 0">No expenses yet</div>';return;}
+  const map={};
+  exps.forEach(e=>{
+    const k=(e.n||'Expense').trim();
+    if(!map[k])map[k]={name:k,total:0,cat:e.c,count:0};
+    map[k].total+=e.a;map[k].count++;
+  });
+  const sorted=Object.values(map).sort((a,b)=>b.total-a.total).slice(0,5);
+  const max=sorted[0]?.total||1;
+  const catColor=c=>c==='needs'?'var(--blue)':c==='wants'?'var(--amber)':'var(--lime-text)';
+  el.innerHTML=sorted.map((item,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:${i<sorted.length-1?'10':'0'}px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);width:14px;flex-shrink:0">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+          <div style="font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%">${item.name}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${catColor(item.cat)}">€${Math.round(item.total)}</div>
+        </div>
+        <div style="height:3px;background:var(--border2);border-radius:2px;overflow:hidden">
+          <div style="height:100%;width:${item.total/max*100}%;background:${catColor(item.cat)};border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1)"></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ── DONUT CHART ───────────────────────────────────────────────────────────
+function renderDonut(n,w,s){
+  const svg=document.getElementById('donut-svg');
+  const legend=document.getElementById('donut-legend');
+  if(!svg||!legend)return;
+  const total=n+w+s||1;
+  const R=38,cx=50,cy=50,stroke=14;
+  const circ=2*Math.PI*R;
+  const isDark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const cats=[
+    {label:'Needs',val:n,color:isDark?'#4fb3ff':'#1a6fbf'},
+    {label:'Wants',val:w,color:isDark?'#ffb347':'#b36800'},
+    {label:'Savings',val:s,color:isDark?'#d4f53c':'#3d6000'},
+  ];
+  let offset=0;
+  svg.innerHTML='<circle cx="50" cy="50" r="38" fill="none" stroke="var(--border2)" stroke-width="14"/>';
+  cats.forEach(c=>{
+    if(!c.val)return;
+    const pct=c.val/total;
+    const dash=circ*pct;
+    const el=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    el.setAttribute('cx',cx);el.setAttribute('cy',cy);el.setAttribute('r',R);
+    el.setAttribute('fill','none');el.setAttribute('stroke',c.color);
+    el.setAttribute('stroke-width',stroke);el.setAttribute('stroke-linecap','butt');
+    el.setAttribute('stroke-dasharray',dash+' '+(circ-dash));
+    el.setAttribute('stroke-dashoffset',-offset);
+    el.style.transition='stroke-dasharray .7s cubic-bezier(.4,0,.2,1)';
+    svg.appendChild(el);
+    offset+=dash;
+  });
+  legend.innerHTML=cats.map(c=>`
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:10px;height:10px;border-radius:3px;background:${c.color};flex-shrink:0"></div>
+      <div style="flex:1;font-size:12px;color:var(--muted)">${c.label}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--text)">${Math.round(c.val/total*100)}%</div>
+    </div>`).join('');
 }
 
 // ── MONTH VS MONTH COMPARISON ─────────────────────────────────────────────
@@ -1102,6 +1469,8 @@ function renderReport(){
   document.getElementById('bv-w').textContent=fmt(w);
   document.getElementById('bv-s').textContent=fmt(s);
   renderDayChart(exps);
+  renderDonut(n,w,s);
+  renderTopCats(exps);
   renderComparison(off);
 }
 
@@ -1152,6 +1521,36 @@ Top: ${[...exps].sort((a,b)=>b.a-a.a).slice(0,3).map(e=>e.n+' €'+Math.round(e.
   }
 }
 
+
+// ── CSV EXPORT ────────────────────────────────────────────────────────────
+function exportCSV(){
+  const exps=S.expenses||[];
+  if(!exps.length){toast('No expenses to export');return;}
+  const rows=[['Date','Description','Category','Amount (EUR)','Month']];
+  [...exps].sort((a,b)=>new Date(a.d)-new Date(b.d)).forEach(e=>{
+    const d=new Date(e.d);
+    rows.push([
+      d.toLocaleDateString('en-GB'),
+      '"'+(e.n||'').replace(/"/g,'""')+'"',
+      e.c||'',
+      e.a.toFixed(2),
+      d.toLocaleDateString('en-US',{month:'long',year:'numeric'})
+    ]);
+  });
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='argati-cash-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  hap('success');
+  toast('Exported '+exps.length+' expenses','ok');
+}
+
 // ── SETTINGS ─────────────────────────────────────────────────────────────
 function loadForm(){
   document.getElementById('s-sal').value=S.salary||'';
@@ -1196,6 +1595,12 @@ ld();
 autoLogRecurring();
 renderDash();
 document.getElementById('hdr-date').textContent=mo();
+// Show onboarding on first launch
+if(!S.onboarded){
+  document.getElementById('onboard').classList.remove('hidden');
+} else {
+  document.getElementById('onboard').classList.add('hidden');
+}
 // Init pill on first active tab
 requestAnimationFrame(()=>{
   const active=document.querySelector('.tab.active');
