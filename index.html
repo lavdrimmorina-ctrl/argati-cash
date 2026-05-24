@@ -353,9 +353,9 @@ body{
 
 
 /* ONBOARDING */
-.onboard{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;padding:env(safe-area-inset-top,44px) 0 env(safe-area-inset-bottom,0px)}
-.onboard.hidden{display:none}
-.ob-slides{display:flex;overflow:hidden;flex:1}
+.onboard{position:fixed;inset:0;z-index:2000;background:var(--bg);display:flex;flex-direction:column;padding:env(safe-area-inset-top,44px) 0 env(safe-area-inset-bottom,0px)}
+.onboard.hidden{display:none!important}
+.ob-slides{display:flex;overflow:hidden;flex:1;transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .ob-slide{min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 32px;text-align:center;transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .ob-emoji{font-size:72px;margin-bottom:24px;animation:obPop .5s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes obPop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
@@ -444,6 +444,41 @@ body{
 </style>
 </head>
 <body>
+<!-- ONBOARDING -->
+<div class="onboard" id="onboard">
+  <div class="ob-slides" id="ob-slides">
+    <div class="ob-slide">
+      <div class="ob-emoji">💸</div>
+      <div class="ob-title">Argati Cash</div>
+      <div class="ob-sub">Your personal money manager. Track spending, hit savings goals, and take control of your salary — all in one place.</div>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-emoji">💰</div>
+      <div class="ob-title">Set your salary</div>
+      <div class="ob-sub">Tell us how much you earn and when you get paid so we can calculate your daily budget.</div>
+      <div class="ob-field-group"><div class="ob-lbl">Monthly net salary (€)</div><input class="fl-input" id="ob-salary" type="number" placeholder="e.g. 800" inputmode="decimal"></div>
+      <div class="ob-field-group"><div class="ob-lbl">Payday (day of month)</div><input class="fl-input" id="ob-payday" type="number" placeholder="25" min="1" max="31" inputmode="numeric"></div>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-emoji">🎯</div>
+      <div class="ob-title">Budget split</div>
+      <div class="ob-sub">The 50/30/20 rule: 50% needs, 30% wants, 20% savings. Adjust to fit your life.</div>
+      <div class="ob-field-group"><div class="ob-lbl">Needs % (rent, food, bills)</div><input class="fl-input" id="ob-np" type="number" placeholder="50" inputmode="numeric"></div>
+      <div class="ob-field-group"><div class="ob-lbl">Wants % (dining, fun)</div><input class="fl-input" id="ob-wp" type="number" placeholder="30" inputmode="numeric"></div>
+      <div class="ob-field-group"><div class="ob-lbl">Savings %</div><input class="fl-input" id="ob-sp" type="number" placeholder="20" inputmode="numeric"></div>
+    </div>
+  </div>
+  <div class="ob-dots" id="ob-dots">
+    <div class="ob-dot active"></div>
+    <div class="ob-dot"></div>
+    <div class="ob-dot"></div>
+  </div>
+  <button class="ob-btn" id="ob-btn" onclick="obNext()">Get started</button>
+  <div class="ob-skip" onclick="obFinish()">Skip setup</div>
+</div>
+
+<!-- CONFETTI -->
+<canvas id="confetti-canvas"></canvas>
 
 
 <div class="hdr">
@@ -703,41 +738,7 @@ body{
 
 
 
-<!-- ONBOARDING -->
-<div class="onboard" id="onboard">
-  <div class="ob-slides" id="ob-slides">
-    <div class="ob-slide">
-      <div class="ob-emoji">💸</div>
-      <div class="ob-title">Argati Cash</div>
-      <div class="ob-sub">Your personal money manager. Track spending, hit savings goals, and take control of your salary — all in one place.</div>
-    </div>
-    <div class="ob-slide">
-      <div class="ob-emoji">💰</div>
-      <div class="ob-title">Set your salary</div>
-      <div class="ob-sub">Tell us how much you earn and when you get paid so we can calculate your daily budget.</div>
-      <div class="ob-field-group"><div class="ob-lbl">Monthly net salary (€)</div><input class="fl-input" id="ob-salary" type="number" placeholder="e.g. 800" inputmode="decimal"></div>
-      <div class="ob-field-group"><div class="ob-lbl">Payday (day of month)</div><input class="fl-input" id="ob-payday" type="number" placeholder="25" min="1" max="31" inputmode="numeric"></div>
-    </div>
-    <div class="ob-slide">
-      <div class="ob-emoji">🎯</div>
-      <div class="ob-title">Budget split</div>
-      <div class="ob-sub">The 50/30/20 rule: 50% needs, 30% wants, 20% savings. Adjust to fit your life.</div>
-      <div class="ob-field-group"><div class="ob-lbl">Needs % (rent, food, bills)</div><input class="fl-input" id="ob-np" type="number" placeholder="50" inputmode="numeric"></div>
-      <div class="ob-field-group"><div class="ob-lbl">Wants % (dining, fun)</div><input class="fl-input" id="ob-wp" type="number" placeholder="30" inputmode="numeric"></div>
-      <div class="ob-field-group"><div class="ob-lbl">Savings %</div><input class="fl-input" id="ob-sp" type="number" placeholder="20" inputmode="numeric"></div>
-    </div>
-  </div>
-  <div class="ob-dots" id="ob-dots">
-    <div class="ob-dot active"></div>
-    <div class="ob-dot"></div>
-    <div class="ob-dot"></div>
-  </div>
-  <button class="ob-btn" id="ob-btn" onclick="obNext()">Get started</button>
-  <div class="ob-skip" onclick="obFinish()">Skip setup</div>
-</div>
 
-<!-- CONFETTI -->
-<canvas id="confetti-canvas"></canvas>
 
 <!-- EDIT EXPENSE MODAL -->
 <div class="edit-modal-wrap" id="edit-modal" onclick="closeEditModal(event)">
@@ -1615,7 +1616,8 @@ autoLogRecurring();
 renderDash();
 document.getElementById('hdr-date').textContent=mo();
 // Show onboarding on first launch
-if(!S.onboarded){
+const shouldOnboard = !S.onboarded && !S.salary;
+if(shouldOnboard){
   document.getElementById('onboard').classList.remove('hidden');
 } else {
   document.getElementById('onboard').classList.add('hidden');
