@@ -641,7 +641,7 @@ body{
         <div id="cmp-rows"></div>
       </div>
       <div class="ai-card">
-        <div class="ai-hdr"><div class="ai-pulse"></div><div class="ai-title">Gemini analysis</div></div>
+        <div class="ai-hdr"><div class="ai-pulse"></div><div class="ai-title" id="ai-provider-lbl">AI analysis</div></div>
         <div class="ai-body" id="ai-body">Tap below for an honest AI breakdown of your month.</div>
         <button class="ai-btn" id="ai-btn" onclick="runAI()">
           <div class="spin" id="ai-spin"></div><span id="ai-lbl">Analyse spending</span>
@@ -661,11 +661,11 @@ body{
       <div class="fl-group"><div class="fl-lbl">Needs %</div><input class="fl-input" type="number" id="s-np" placeholder="50" inputmode="numeric"></div>
       <div class="fl-group"><div class="fl-lbl">Wants %</div><input class="fl-input" type="number" id="s-wp" placeholder="30" inputmode="numeric"></div>
       <div class="fl-group"><div class="fl-lbl">Savings %</div><input class="fl-input" type="number" id="s-sp" placeholder="20" inputmode="numeric"></div>
-      <div class="set-sect">Gemini AI</div>
+      <div class="set-sect">AI Provider</div>
       <div class="fl-group">
         <div class="fl-lbl">API key</div>
-        <input class="fl-input" type="password" id="s-key" placeholder="AIza…" autocomplete="off">
-        <div class="set-hint">Free key at aistudio.google.com · Stored only on your device</div>
+        <input class="fl-input" type="password" id="s-key" placeholder="Groq key: gsk_… or Gemini: AIza…" autocomplete="off">
+        <div class="set-hint">Groq (recommended, free): console.groq.com · Gemini (free): aistudio.google.com · Stored only on your device</div>
       </div>
       <button class="save-btn" onclick="saveSettings()">Save settings</button>
       <div class="set-sect">Data</div>
@@ -1456,6 +1456,8 @@ function renderReport(){
   exps.forEach(e=>{if(e.c==='needs')n+=e.a;else if(e.c==='wants')w+=e.a;else s+=e.a;});
   const total=n+w+s;
   document.getElementById('rpt-title').textContent=mo(off);
+  const provLbl=document.getElementById('ai-provider-lbl');
+  if(provLbl)provLbl.textContent=(S.key&&S.key.startsWith('gsk_')?'Groq':'Gemini')+' analysis';
   document.getElementById('rs-total').textContent=fmt(total);
   document.getElementById('rs-rem2').textContent=fmt(Math.max(0,sal-total));
   document.getElementById('rs-cnt').textContent=exps.length;
@@ -1511,9 +1513,26 @@ Salary €${sal} | Needs €${n.toFixed(0)} (target €${(sal*S.np/100).toFixed(
 Top: ${[...exps].sort((a,b)=>b.a-a.a).slice(0,3).map(e=>e.n+' €'+Math.round(e.a)).join(', ')}
 3 sentences max. Honest, direct. What's good, what's bad, one action for next month.`;
   try{
-    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${S.key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:180,temperature:0.7}})});
-    const d=await r.json();
-    body.textContent=d.candidates?.[0]?.content?.parts?.[0]?.text||'No response.';
+    let text='';
+    if(S.key.startsWith('gsk_')){
+      // Groq
+      const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.key},
+        body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],max_tokens:180,temperature:0.7})
+      });
+      const d=await r.json();
+      text=d.choices?.[0]?.message?.content||'No response.';
+    } else {
+      // Gemini fallback
+      const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${S.key}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:180,temperature:0.7}})
+      });
+      const d=await r.json();
+      text=d.candidates?.[0]?.content?.parts?.[0]?.text||'No response.';
+    }
+    body.textContent=text;
     lbl.textContent='Refresh analysis';spin.style.display='none';btn.disabled=false;
   }catch(e){
     body.textContent='Connection failed. Check your API key.';
