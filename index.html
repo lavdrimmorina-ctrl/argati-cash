@@ -353,22 +353,52 @@ body{
 
 
 /* ONBOARDING */
-.onboard{position:fixed;inset:0;z-index:2000;background:var(--bg);display:flex;flex-direction:column;padding:env(safe-area-inset-top,44px) 0 env(safe-area-inset-bottom,0px)}
+.onboard{
+  position:fixed;inset:0;z-index:2000;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top,44px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
 .onboard.hidden{display:none!important}
-.ob-slides{display:flex;overflow:hidden;flex:1;transition:transform .35s cubic-bezier(.4,0,.2,1)}
-.ob-slide{min-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 32px;text-align:center;transition:transform .35s cubic-bezier(.4,0,.2,1)}
-.ob-emoji{font-size:72px;margin-bottom:24px;animation:obPop .5s cubic-bezier(.34,1.56,.64,1) both}
-@keyframes obPop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
-.ob-title{font-size:28px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em}
-.ob-sub{font-size:15px;color:var(--muted);line-height:1.6;margin-bottom:32px;font-weight:400}
-.ob-field-group{width:100%;margin-bottom:12px;text-align:left}
+/* Outer clip — overflow hidden sits here, NOT on the track */
+.ob-slides-wrap{flex:1;overflow:hidden;position:relative}
+/* Inner track — slides side by side, transitions here */
+.ob-slides{
+  display:flex;
+  width:100%;height:100%;
+  transition:transform .38s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+/* Each slide fills the wrapper exactly */
+.ob-slide{
+  min-width:100%;width:100%;
+  flex-shrink:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:32px 32px 16px;
+  text-align:center;
+  overflow-y:auto;
+}
+.ob-emoji{font-size:68px;margin-bottom:20px;line-height:1}
+.ob-title{font-size:26px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em}
+.ob-sub{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:24px;font-weight:400;max-width:300px}
+.ob-field-group{width:100%;margin-bottom:10px;text-align:left}
 .ob-lbl{font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
-.ob-dots{display:flex;justify-content:center;gap:6px;padding:16px 0}
-.ob-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all .3s}
-.ob-dot.active{width:20px;background:var(--lime)}
-.ob-btn{width:calc(100% - 48px);margin:0 24px 16px;padding:16px;background:var(--lime);color:#0a0c02;border:none;border-radius:18px;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:0.04em}
+.ob-dots{display:flex;justify-content:center;gap:7px;padding:14px 0}
+.ob-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all .3s cubic-bezier(.4,0,.2,1)}
+.ob-dot.active{width:22px;border-radius:3px;background:var(--lime)}
+.ob-btn{
+  width:calc(100% - 48px);margin:0 24px 12px;
+  padding:16px;background:var(--lime);color:#0a0c02;
+  border:none;border-radius:18px;
+  font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;letter-spacing:0.04em;
+  transition:transform .15s,opacity .15s;
+}
+.ob-btn:active{transform:scale(0.97)}
 @media(prefers-color-scheme:light){.ob-btn{color:#fff;background:var(--lime-text)}}
-.ob-skip{font-size:13px;color:var(--dim);text-align:center;cursor:pointer;padding:8px;margin-bottom:8px}
+.ob-skip{font-size:13px;color:var(--dim);text-align:center;cursor:pointer;padding:10px;margin-bottom:4px}
 
 /* CONFETTI */
 #confetti-canvas{position:fixed;inset:0;z-index:998;pointer-events:none;display:none}
@@ -439,24 +469,22 @@ body{
 
 /* FLOATING SCANNER BUTTON */
 .scan-fab{
-  position:fixed;
-  bottom:calc(env(safe-area-inset-bottom) + 100px);
-  right:20px;
-  width:52px;height:52px;
-  background:var(--lime);
-  border-radius:16px;
-  border:none;
+  position:absolute;
+  top:10px;
+  right:16px;
+  width:40px;height:40px;
+  background:var(--surface2);
+  border-radius:12px;
+  border:1px solid var(--border);
   display:none;
   align-items:center;justify-content:center;
-  z-index:90;
+  z-index:10;
   cursor:pointer;
-  box-shadow:0 4px 20px rgba(0,0,0,0.25),0 1px 4px rgba(0,0,0,0.15);
-  transition:transform .15s cubic-bezier(.34,1.56,.64,1),opacity .2s;
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .15s;
 }
 .scan-fab.visible{display:flex}
-.scan-fab:active{transform:scale(0.9)}
-.scan-fab svg{width:24px;height:24px;stroke:#0a0c02;stroke-width:2;fill:none}
-@media(prefers-color-scheme:light){.scan-fab svg{stroke:#fff}}
+.scan-fab:active{transform:scale(0.88);background:var(--surface3)}
+.scan-fab svg{width:20px;height:20px;stroke:var(--lime-text);stroke-width:2;fill:none}
 
 /* SCANNER MODAL */
 .scanner-modal{
@@ -518,6 +546,30 @@ body{
 .scanner-tip{font-size:12px;color:var(--muted);margin-bottom:5px;padding-left:14px;position:relative;line-height:1.4}
 .scanner-tip::before{content:'•';position:absolute;left:0;color:var(--lime-text)}
 
+
+.notif-enable-btn{
+  flex-shrink:0;
+  padding:8px 16px;
+  background:var(--lime-bg);
+  border:1px solid var(--lime-border);
+  border-radius:20px;
+  color:var(--lime-text);
+  font-family:'Outfit',sans-serif;
+  font-size:12px;font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  transition:background .15s;
+}
+.notif-enable-btn:active{background:var(--lime-border)}
+.notif-enable-btn.enabled{
+  background:transparent;
+  border-color:var(--border);
+  color:var(--muted);
+  cursor:default;
+}
+
 /* TOAST */
 .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--surface3);border:1px solid var(--border2);color:var(--text);padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;z-index:9999;letter-spacing:0.04em}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -528,6 +580,7 @@ body{
 <body>
 <!-- ONBOARDING -->
 <div class="onboard" id="onboard">
+  <div class="ob-slides-wrap">
   <div class="ob-slides" id="ob-slides">
     <div class="ob-slide">
       <div class="ob-emoji">💸</div>
@@ -549,6 +602,7 @@ body{
       <div class="ob-field-group"><div class="ob-lbl">Wants % (dining, fun)</div><input class="fl-input" id="ob-wp" type="number" placeholder="30" inputmode="numeric"></div>
       <div class="ob-field-group"><div class="ob-lbl">Savings %</div><input class="fl-input" id="ob-sp" type="number" placeholder="20" inputmode="numeric"></div>
     </div>
+  </div>
   </div>
   <div class="ob-dots" id="ob-dots">
     <div class="ob-dot active"></div>
@@ -655,7 +709,10 @@ body{
   <!-- ══ LOG ══ -->
   <div class="page" id="pg-log">
     <div class="scroll-area">
-      <div class="log-top">
+      <div class="log-top" style="position:relative">
+        <button class="scan-fab" id="scan-fab" onclick="openScannerModal()">
+          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </button>
         <div class="log-lbl">Amount</div>
         <div class="log-amount"><span class="log-cur">€</span><span class="log-num" id="log-num">0</span></div>
       </div>
@@ -935,9 +992,9 @@ function goto(id,btn,skipHap){
   if(id==='goals'){renderGoals();renderRecurringList();}
   if(id==='report'){reportOffset=0;renderReport();}
   if(id==='settings')loadForm();
-  // Show scanner FAB only on Log tab
+  // FAB is inside log page — always visible there
   const fab=document.getElementById('scan-fab');
-  if(fab)fab.className='scan-fab'+(id==='log'?' visible':'');
+  if(fab)fab.className='scan-fab visible';
 }
 
 function movePill(activeBtn){
@@ -1275,7 +1332,7 @@ function obNext(){
   hap('light');
   if(obIdx===OB_TOTAL-1){obFinish();return;}
   obIdx++;
-  document.getElementById('ob-slides').style.transform=`translateX(-${obIdx*100}%)`;
+  document.getElementById('ob-slides').style.transform='translateX(-'+obIdx*100+'%)';
   obUpdateDots();
 }
 
@@ -1965,11 +2022,6 @@ window.addEventListener('resize',()=>{
 });
 </script>
 
-
-<!-- SCANNER FAB -->
-<button class="scan-fab" id="scan-fab" onclick="openScannerModal()">
-  <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-</button>
 
 <!-- SCANNER MODAL -->
 <div class="scanner-modal" id="scanner-modal">
