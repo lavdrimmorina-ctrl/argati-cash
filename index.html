@@ -596,6 +596,18 @@ body{
           <div class="freq-btn" data-freq="weekly" onclick="pickFreq('weekly',this)">Weekly</div>
         </div>
       </div>
+      <button class="scan-btn" onclick="openScanner()">
+        <span style="font-size:18px">📷</span> Scan receipt or bank screenshot
+      </button>
+      <img id="scan-preview" class="scan-preview">
+      <div class="scan-result" id="scan-result">
+        <div class="scan-result-lbl">📷 Detected from image</div>
+        <div class="scan-result-row">Amount <span class="scan-result-val" id="scan-amt-val">—</span></div>
+        <div class="scan-result-row" style="margin-top:4px">Description <span class="scan-result-val" id="scan-desc-val">—</span></div>
+        <button class="scan-use-btn" onclick="useScanResult()">Use this ↗</button>
+      </div>
+      <div class="scan-spinner" id="scan-spinner">🔍 Analysing image…</div>
+      <input type="file" id="scan-file" accept="image/*" capture="environment" style="display:none" onchange="handleScanFile(event)">
       <div class="numpad">
         <div class="nb" onclick="np('1')">1</div><div class="nb" onclick="np('2')">2</div><div class="nb" onclick="np('3')">3</div>
         <div class="nb" onclick="np('4')">4</div><div class="nb" onclick="np('5')">5</div><div class="nb" onclick="np('6')">6</div>
@@ -696,6 +708,27 @@ body{
       <div class="fl-group"><div class="fl-lbl">Needs %</div><input class="fl-input" type="number" id="s-np" placeholder="50" inputmode="numeric"></div>
       <div class="fl-group"><div class="fl-lbl">Wants %</div><input class="fl-input" type="number" id="s-wp" placeholder="30" inputmode="numeric"></div>
       <div class="fl-group"><div class="fl-lbl">Savings %</div><input class="fl-input" type="number" id="s-sp" placeholder="20" inputmode="numeric"></div>
+      <div class="set-sect">Notifications</div>
+      <div class="notif-row">
+        <div class="notif-row-body">
+          <div class="notif-row-title">Evening reminder</div>
+          <div class="notif-row-sub">Daily nudge at 8pm to log expenses</div>
+        </div>
+        <button class="notif-enable-btn" id="notif-btn" onclick="toggleNotifications()">Enable</button>
+      </div>
+      <div class="notif-row">
+        <div class="notif-row-body">
+          <div class="notif-row-title">Overspend alert</div>
+          <div class="notif-row-sub">Notify when a category is over budget</div>
+        </div>
+        <div class="notif-enabled" id="overspend-notif-status">Active</div>
+      </div>
+      <div class="set-sect">Worker URL</div>
+      <div class="fl-group">
+        <div class="fl-lbl">Argati Cash Worker URL</div>
+        <input class="fl-input" type="url" id="s-worker" placeholder="https://argati-cash.yourname.workers.dev">
+        <div class="set-hint">Your Cloudflare Worker URL for push notifications</div>
+      </div>
       <div class="set-sect">AI Provider</div>
       <div class="fl-group">
         <div class="fl-lbl">API key</div>
@@ -947,8 +980,11 @@ function renderDash(){
   const ab=document.getElementById('alert-bar');
   if(alerts.length){
     ab.classList.add('show');
-    document.getElementById('alert-text').textContent='⚠️ '+alerts.join(' · ')+' — consider cutting back.';
-  } else ab.classList.remove('show');
+    const alertMsg='⚠️ '+alerts.join(' · ')+' — consider cutting back.';
+    document.getElementById('alert-text').textContent=alertMsg;
+    // Send push only once per session
+    if(!window._overspendPushSent){ window._overspendPushSent=true; sendOverspendPush(alerts.join(' · ')); }
+  } else { ab.classList.remove('show'); window._overspendPushSent=false; }
 
   // Daily limit
   const now=new Date(),pd=S.payday||25;
@@ -1571,6 +1607,206 @@ function exportCSV(){
   toast('Exported '+exps.length+' expenses','ok');
 }
 
+
+// ── PUSH NOTIFICATIONS ────────────────────────────────────────────────────
+let deviceId = localStorage.getItem('ac-device-id');
+if(!deviceId){ deviceId = 'dev-'+Date.now()+'-'+Math.random().toString(36).slice(2); localStorage.setItem('ac-device-id', deviceId); }
+
+function updateNotifBtn(){
+  const btn = document.getElementById('notif-btn');
+  if(!btn) return;
+  const perm = Notification.permission;
+  if(perm === 'granted' && S.pushSubscribed){
+    btn.textContent = 'Enabled ✓';
+    btn.style.opacity = '0.6';
+    btn.style.cursor = 'default';
+  } else if(perm === 'denied'){
+    btn.textContent = 'Blocked';
+    btn.style.opacity = '0.4';
+    btn.style.cursor = 'default';
+  } else {
+    btn.textContent = 'Enable';
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  }
+}
+
+async function toggleNotifications(){
+  if(!S.workerUrl){ toast('Add Worker URL in Settings first'); return; }
+  if(Notification.permission === 'denied'){ toast('Notifications blocked — enable in iPhone Settings'); return; }
+  if(S.pushSubscribed){ toast('Notifications already enabled'); return; }
+
+  try {
+    const perm = await Notification.requestPermission();
+    if(perm !== 'granted'){ toast('Permission denied'); return; }
+
+    // Get VAPID key from worker
+    const keyRes = await fetch(S.workerUrl + '/vapid-public-key');
+    const { key: vapidKey } = await keyRes.json();
+
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(vapidKey)
+    });
+
+    // Send subscription to worker
+    await fetch(S.workerUrl + '/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subscription: sub.toJSON(), deviceId })
+    });
+
+    S.pushSubscribed = true;
+    sv();
+    updateNotifBtn();
+    hap('success');
+    toast('Notifications enabled!', 'ok');
+  } catch(e) {
+    toast('Failed: ' + e.message);
+  }
+}
+
+function urlBase64ToUint8Array(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(base64);
+  return Uint8Array.from(raw, c => c.charCodeAt(0));
+}
+
+// Send overspend push notification
+async function sendOverspendPush(msg){
+  if(!S.workerUrl || !S.pushSubscribed) return;
+  try {
+    await fetch(S.workerUrl + '/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deviceId, title: '⚠️ Argati Cash', body: msg, icon: '/argati-cash/icon-192.png' })
+    });
+  } catch(e) {}
+}
+
+// ── RECEIPT SCANNER ───────────────────────────────────────────────────────
+let scanResult = null;
+
+function openScanner(){
+  hap('light');
+  document.getElementById('scan-file').click();
+}
+
+function handleScanFile(e){
+  const file = e.target.files[0];
+  if(!file) return;
+
+  // Show preview
+  const reader = new FileReader();
+  reader.onload = async ev => {
+    const preview = document.getElementById('scan-preview');
+    preview.src = ev.target.result;
+    preview.style.display = 'block';
+    document.getElementById('scan-result').style.display = 'none';
+    document.getElementById('scan-spinner').style.display = 'block';
+    await analyseReceipt(ev.target.result);
+  };
+  reader.readAsDataURL(file);
+  // Reset input so same file can be re-selected
+  e.target.value = '';
+}
+
+async function analyseReceipt(dataUrl){
+  if(!S.key){ toast('Add AI API key in Settings'); document.getElementById('scan-spinner').style.display='none'; return; }
+
+  const base64 = dataUrl.split(',')[1];
+  const mimeType = dataUrl.split(';')[0].split(':')[1];
+
+  const prompt = `You are analysing a receipt or bank transaction screenshot. Extract:
+1. The total amount paid (just the number, e.g. 12.50)
+2. A short description of what was purchased (e.g. "Supermarket", "Coffee", "Electricity bill")
+
+Respond ONLY with valid JSON like: {"amount": 12.50, "description": "Supermarket"}
+If you cannot determine the amount, use null. If no description, use "Expense".`;
+
+  try {
+    let text = '';
+
+    if(S.key.startsWith('gsk_')){
+      // Groq vision (llama-3.2-11b-vision)
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + S.key },
+        body: JSON.stringify({
+          model: 'llama-3.2-11b-vision-preview',
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image_url', image_url: { url: dataUrl } },
+              { type: 'text', text: prompt }
+            ]
+          }],
+          max_tokens: 100,
+          temperature: 0.1,
+          response_format: { type: 'json_object' }
+        })
+      });
+      const d = await res.json();
+      text = d.choices?.[0]?.message?.content || '{}';
+    } else {
+      // Gemini vision
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${S.key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [
+            { inline_data: { mime_type: mimeType, data: base64 } },
+            { text: prompt }
+          ]}],
+          generationConfig: { maxOutputTokens: 100, temperature: 0.1 }
+        })
+      });
+      const d = await res.json();
+      text = d.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    }
+
+    // Parse JSON response
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    scanResult = parsed;
+
+    document.getElementById('scan-spinner').style.display = 'none';
+    document.getElementById('scan-amt-val').textContent = parsed.amount ? '€' + parsed.amount : '—';
+    document.getElementById('scan-desc-val').textContent = parsed.description || '—';
+    document.getElementById('scan-result').style.display = 'block';
+    hap('success');
+
+  } catch(err) {
+    document.getElementById('scan-spinner').style.display = 'none';
+    toast('Could not read image. Try a clearer photo.');
+    console.error(err);
+  }
+}
+
+function useScanResult(){
+  if(!scanResult) return;
+  hap('light');
+  if(scanResult.amount){
+    const a = parseFloat(scanResult.amount);
+    if(a > 0){
+      amt = String(a);
+      document.getElementById('log-num').textContent = amt;
+      document.getElementById('log-num').className = 'log-num lit';
+    }
+  }
+  if(scanResult.description){
+    document.getElementById('exp-desc').value = scanResult.description;
+  }
+  // Hide scanner UI
+  document.getElementById('scan-preview').style.display = 'none';
+  document.getElementById('scan-result').style.display = 'none';
+  document.getElementById('add-btn').disabled = !(parseFloat(amt) > 0 && cat);
+  toast('Filled in! Pick a category.', 'ok');
+  scanResult = null;
+}
+
 // ── SETTINGS ─────────────────────────────────────────────────────────────
 function loadForm(){
   document.getElementById('s-sal').value=S.salary||'';
@@ -1579,6 +1815,8 @@ function loadForm(){
   document.getElementById('s-wp').value=S.wp||30;
   document.getElementById('s-sp').value=S.sp||20;
   document.getElementById('s-key').value=S.key||'';
+  document.getElementById('s-worker').value=S.workerUrl||'';
+  updateNotifBtn();
 }
 function saveSettings(){
   S.salary=parseFloat(document.getElementById('s-sal').value)||0;
@@ -1587,6 +1825,7 @@ function saveSettings(){
   S.wp=parseFloat(document.getElementById('s-wp').value)||30;
   S.sp=parseFloat(document.getElementById('s-sp').value)||20;
   S.key=document.getElementById('s-key').value.trim();
+  S.workerUrl=document.getElementById('s-worker').value.trim().replace(/\/$/,'');
   sv();hap('success');toast('Saved!','ok');
 }
 function clearMonth(){
@@ -1617,6 +1856,7 @@ renderDash();
 document.getElementById('hdr-date').textContent=mo();
 // Wire up onboarding buttons
 document.getElementById('ob-btn').addEventListener('click', obNext);
+updateNotifBtn();
 document.getElementById('ob-skip').addEventListener('click', obFinish);
 
 // Show onboarding on first launch
